@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Žumpuj.sk — žumpa, ktorá sa vyvezie sama</title>
 <meta name="description" content="Inteligentný solárny senzor + umelá inteligencia. Sledujeme hladinu vo vašej žumpe, sami objednáme vývoz a dohliadneme na ekologické spracovanie. Vyvinuté a vyrobené na Slovensku.">
-<meta name="theme-color" content="#06080B">
+<meta name="theme-color" content="#070907">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="sk_SK">
@@ -17,6 +17,8 @@
 <link rel="canonical" href="https://zumpuj.sk/">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 
 <!-- Písma hostujeme lokálne — stránka tak pred udelením súhlasu
      nekomunikuje so žiadnou treťou stranou (ani s Google Fonts). -->
@@ -36,9 +38,9 @@
   "email": "info@zumpuj.sk",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Fraňa Mojtu 18",
-    "postalCode": "949 01",
-    "addressLocality": "Nitra",
+    "streetAddress": "Hattalova 12/A",
+    "postalCode": "831 03",
+    "addressLocality": "Bratislava",
     "addressCountry": "SK"
   },
   "description": "Inteligentné riešenie pre vašu žumpu — senzor hladiny a automatizované objednanie vývozu."
@@ -52,7 +54,7 @@
 <div class="preloader" id="preloader" aria-hidden="true">
   <div class="preloader__inner">
     <div class="preloader__mark">
-      <svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-drop"></use></svg>
+      <img src="assets/img/logo-mark.svg" alt="" width="52" height="52">
     </div>
     <div class="preloader__label" data-scramble="ŽUMPUJ.SK">ŽUMPUJ.SK</div>
     <div class="preloader__bar"><i></i></div>
@@ -106,11 +108,8 @@
 <!-- ============ HEADER ============ -->
 <header class="header" id="header">
   <a class="brand" href="#top" data-cursor="Domov">
-    <span class="brand__mark"><svg viewBox="0 0 48 48"><use href="#i-drop"></use></svg></span>
-    <span class="brand__text">
-      <b>žumpuj<i>.sk</i></b>
-      <em>inteligentné riešenie pre vašu žumpu</em>
-    </span>
+    <img class="brand__logo" src="assets/img/logo.png" alt="Žumpuj" width="802" height="253" fetchpriority="high">
+    <em class="brand__tag">inteligentné riešenie pre vašu žumpu</em>
   </a>
 
   <nav class="nav" aria-label="Hlavná navigácia">
@@ -141,7 +140,7 @@
     <a href="#pridat-sa"style="--i:4"><span class="menu__num">05</span><span class="menu__txt">Pridať sa</span></a>
   </nav>
   <div class="menu__foot">
-    <span>4Eko s.r.o. · Nitra</span>
+    <span>4Eko s.r.o. · Bratislava</span>
     <a href="mailto:info@zumpuj.sk">info@zumpuj.sk</a>
   </div>
 </div>
@@ -356,7 +355,7 @@
               <div class="ui__top">
                 <div>
                   <p class="ui__hi">Dobrý deň 👋</p>
-                  <p class="ui__addr">Domov · Nitra</p>
+                  <p class="ui__addr">Domov · rodinný dom</p>
                 </div>
                 <span class="ui__live"><i></i>live</span>
               </div>
@@ -374,8 +373,8 @@
                 <svg viewBox="0 0 260 80" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="var(--brand-bright)" stop-opacity=".45"/>
-                      <stop offset="100%" stop-color="var(--brand-bright)" stop-opacity="0"/>
+                      <stop offset="0%" stop-color="var(--aqua)" stop-opacity=".45"/>
+                      <stop offset="100%" stop-color="var(--aqua)" stop-opacity="0"/>
                     </linearGradient>
                   </defs>
                   <path id="chartArea" class="chart__area" d=""/>
@@ -513,7 +512,7 @@
         <p class="signup__gift reveal"><span>🎉</span> Môžete sa tešiť na špeciálnu ponuku pre našich priekopníkov.</p>
         <div class="signup__trust reveal">
           <b>4Eko s.r.o.</b>
-          <span>Fraňa Mojtu 18, 949 01 Nitra</span>
+          <span>Hattalova 12/A, 831 03 Bratislava</span>
           <a href="mailto:info@zumpuj.sk">info@zumpuj.sk</a>
         </div>
       </div>
@@ -602,13 +601,12 @@
   <div class="wrap">
     <div class="footer__top">
       <div class="footer__brand">
-        <span class="brand__mark"><svg viewBox="0 0 48 48"><use href="#i-drop"></use></svg></span>
-        <b>žumpuj<i>.sk</i></b>
+        <img class="footer__logo" src="assets/img/logo.png" alt="Žumpuj" width="802" height="253" loading="lazy">
         <p>Inteligentné riešenie pre vašu žumpu. Vyvinuté a vyrobené na Slovensku.</p>
       </div>
       <div class="footer__col">
         <h4>Kto stojí za Žumpuj.sk?</h4>
-        <p>4Eko s.r.o.<br>Fraňa Mojtu 18<br>949 01 Nitra</p>
+        <p>4Eko s.r.o.<br>Hattalova 12/A<br>831 03 Bratislava</p>
       </div>
       <div class="footer__col">
         <h4>Kontakt</h4>
