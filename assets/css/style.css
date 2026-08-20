@@ -38,7 +38,9 @@
   /* rytmus */
   --wrap: 1280px;
   --gut: clamp(20px, 5vw, 64px);
-  --sec: clamp(88px, 12vw, 180px);
+  --sec: clamp(56px, 5.5vw, 92px);    /* JEDINÝ zdroj vertikálneho rytmu sekcií.
+                                         Nepridávaj sekciám vlastný padding-block –
+                                         medzery prestanú byť rovnaké. */
   --r-s: 12px;
   --r-m: 20px;
   --r-l: 32px;
@@ -123,7 +125,7 @@ section[id]{ scroll-margin-top:84px; }
 .eyebrow__ico{ width:16px; height:16px; color:var(--brand-bright); flex:none; }
 .eyebrow__sep{ width:26px; height:1px; background:var(--line-2); }
 
-.section__head{ max-width:920px; margin-bottom:clamp(40px,6vw,80px); }
+.section__head{ max-width:920px; margin-bottom:clamp(26px,3.2vw,44px); }
 .section__head--center{ margin-inline:auto; text-align:center; }
 .section__head--center .eyebrow{ justify-content:center; }
 .section__head--center .lead{ margin-inline:auto; }
@@ -273,6 +275,7 @@ body.ready .anim{ opacity:1; }
 .brand__text em{
   font-style:normal; font-family:var(--font-mono);
   font-size:.56rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted-2);
+  margin-top:6px;   /* podnadpis lepí na názov – trochu ho odsadíme */
 }
 
 .nav{ position:relative; display:flex; gap:6px; padding:5px; border-radius:100px; border:1px solid var(--line); background:rgba(255,255,255,.02); backdrop-filter:blur(10px); }
@@ -448,7 +451,13 @@ body.ready .anim{ opacity:1; }
 
 /* -------------------------------------------------------------- 07 PROBLEM */
 .problem{ background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%); }
-.split{ display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(28px,5vw,72px); }
+.split{ display:grid; grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr); gap:clamp(28px,5vw,72px); align-items:start; }
+/* nadpis v úzkom stĺpci — plná veľkosť .h2 by sa lámala do šiestich riadkov
+   a stĺpce by boli výškovo neúmerné */
+.split__l .h2{ font-size:clamp(1.9rem,3.6vw,3.05rem); }
+/* v ľavom stĺpci za nadpisom už nič nenasleduje – spodný okraj by len
+   nafúkol medzeru pred ďalšou sekciou a rozbil rovnomerný rytmus */
+.split__l .h2{ margin-bottom:0; }
 .pain{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:34px; }
 .pain__item{
   padding:20px; border-radius:var(--r-m);
@@ -465,7 +474,7 @@ body.ready .anim{ opacity:1; }
 .story__stage{ position:relative; }
 .story__layout{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:clamp(30px,6vw,90px); align-items:start; }
 
-.story__visual{ position:sticky; top:calc(50vh - 190px); }
+.story__visual{ position:sticky; top:calc(50vh - 190px); align-self:start; }
 .story__viz{
   position:relative; aspect-ratio:1; width:min(100%,380px); margin-inline:auto;
   display:grid; place-items:center;
@@ -521,7 +530,7 @@ body.ready .anim{ opacity:1; }
 .e-drops{ stroke:var(--brand-bright); stroke-dasharray:5 7; animation:beam 1.4s linear infinite; }
 .e-ground{ stroke:var(--line-2); stroke-width:2; }
 
-.story__steps{ display:grid; gap:clamp(60px,14vh,160px); padding-block:8vh 24vh; }
+.story__steps{ display:grid; gap:clamp(56px,6vw,104px); padding-block:0; }
 .step{
   position:relative; padding-left:clamp(52px,6vw,84px);
   opacity:.28; transform:translateY(10px);
@@ -909,9 +918,15 @@ body.ready .anim{ opacity:1; }
   .hero{ min-height:0; }
   .tank{ width:min(100%,340px); }
   .story__layout{ grid-template-columns:1fr; }
-  .story__visual{ position:sticky; top:84px; }
-  .story__viz{ width:min(60%,260px); }
-  .story__steps{ padding-block:4vh 12vh; gap:clamp(48px,10vh,90px); }
+  /* Pri jednom stĺpci sa lepkavý vizuál pripne pod hlavičku a text krokov mu
+     podlieza — animovaná scéna potom prechádza cez písmo. V jednostĺpcovom
+     rozložení preto sticky vypíname a ilustrácia zostáva nad krokmi. */
+  .story__visual{ position:static; top:auto; margin-bottom:clamp(24px,4vw,40px); }
+  .story__viz{ width:min(58%,230px); }
+  .story__steps{ padding-block:0; gap:clamp(48px,7vw,80px); }
+  /* keď vizuál nesleduje čítanie, stlmené kroky by boli len horšie čitateľné */
+  .step{ opacity:1; transform:none; }
+  .step__num{ color:var(--brand-bright); }
   .app__stage{ grid-template-columns:1fr; }
   .split{ grid-template-columns:1fr; }
   .signup__grid{ grid-template-columns:1fr; }

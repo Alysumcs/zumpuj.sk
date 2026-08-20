@@ -177,6 +177,35 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
     els.forEach(function (el) { io.observe(el); });
+
+    /* Poistka: pri veľmi rýchlom scrollovaní alebo skoku na kotvu môže prvok
+       preletieť celým výrezom medzi dvoma snímkami a IntersectionObserver ho
+       preskočí — obsah by potom zostal natrvalo neviditeľný. Preto po každom
+       scrolle ešte odhalíme všetko, čo je už nad spodkom obrazovky. */
+    var ticking = false;
+    function sweep() {
+      var vh = window.innerHeight;
+      for (var i = els.length - 1; i >= 0; i--) {
+        var el = els[i];
+        if (el.classList.contains('in')) { els.splice(i, 1); continue; }
+        if (el.getBoundingClientRect().top < vh * 0.92) {
+          el.classList.add('in');
+          io.unobserve(el);
+          els.splice(i, 1);
+        }
+      }
+      if (!els.length) {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+      }
+    }
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; sweep(); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
   })();
 
   /* ---------------------------------------------------- 06 SCROLL STORY -- */
@@ -191,14 +220,32 @@
     }
     activate(0);
 
-    if (!('IntersectionObserver' in window)) { steps.forEach(function (s) { s.classList.add('on'); }); scenes.forEach(function (s) { s.classList.add('on'); }); return; }
+    /* Aktívny krok počítame zo scrollu, nie cez IntersectionObserver s okrajmi.
+       Dôvod: IO verzia potrebovala pod posledným krokom ~10vh voľného miesta,
+       aby sa stihol dostať do stredu obrazovky — a to rozbíjalo rovnomerné
+       medzery medzi sekciami. Takto si vystačíme bez extra odsadenia a navyše
+       sa nikdy nestane, že by pri rýchlom scrollovaní nebol aktívny žiadny krok. */
+    var current = -1;
+    function pick() {
+      var mid = window.innerHeight * 0.5;
+      var best = 0, bestD = Infinity;
+      for (var i = 0; i < steps.length; i++) {
+        var r = steps[i].getBoundingClientRect();
+        var d = Math.abs(r.top + r.height / 2 - mid);
+        if (d < bestD) { bestD = d; best = i; }
+      }
+      if (best !== current) { current = best; activate(best); }
+    }
 
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) activate(parseInt(e.target.getAttribute('data-step'), 10) || 0);
-      });
-    }, { rootMargin: '-45% 0px -45% 0px' });
-    steps.forEach(function (s) { io.observe(s); });
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; pick(); });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    pick();
   })();
 
   /* ------------------------------------- 07 POČÍTADLÁ + SCRAMBLE TEXT ---- */
