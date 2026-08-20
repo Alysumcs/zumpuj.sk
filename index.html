@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Žumpuj.sk — žumpa, ktorá sa vyvezie sama</title>
+<meta name="description" content="Inteligentný solárny senzor + umelá inteligencia. Sledujeme hladinu vo vašej žumpe, sami objednáme vývoz a dohliadneme na ekologické spracovanie. Vyvinuté a vyrobené na Slovensku.">
+<meta name="theme-color" content="#06080B">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="sk_SK">
+<meta property="og:title" content="Žumpuj.sk — žumpa, ktorá sa vyvezie sama">
+<meta property="og:description" content="IoT senzor a AI, ktoré sa postarajú o celý vývoz žumpy za vás. Vyvinuté na Slovensku.">
+<meta property="og:url" content="https://zumpuj.sk/">
+<meta property="og:image" content="assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://zumpuj.sk/">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+<!-- Písma hostujeme lokálne — stránka tak pred udelením súhlasu
+     nekomunikuje so žiadnou treťou stranou (ani s Google Fonts). -->
+<link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Žumpuj.sk",
+  "legalName": "4Eko s.r.o.",
+  "url": "https://zumpuj.sk/",
+  "email": "info@zumpuj.sk",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Fraňa Mojtu 18",
+    "postalCode": "949 01",
+    "addressLocality": "Nitra",
+    "addressCountry": "SK"
+  },
+  "description": "Inteligentné riešenie pre vašu žumpu — senzor hladiny a automatizované objednanie vývozu."
+}
+</script>
+</head>
+
+<body class="is-loading">
+
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader__inner">
+    <div class="preloader__mark">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-drop"></use></svg>
+    </div>
+    <div class="preloader__label" data-scramble="ŽUMPUJ.SK">ŽUMPUJ.SK</div>
+    <div class="preloader__bar"><i></i></div>
+  </div>
+</div>
+
+<!-- ============ CURSOR ============ -->
+<div class="cursor" id="cursor" aria-hidden="true">
+  <div class="cursor__dot"></div>
+  <div class="cursor__ring"><span class="cursor__label"></span></div>
+</div>
+
+<!-- ============ SCROLL PROGRESS ============ -->
+<div class="scroll-progress" aria-hidden="true"><i id="scrollBar"></i></div>
+
+<!-- ============ SVG SPRITE ============ -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-drop" viewBox="0 0 48 48">
+      <path d="M24 4c7 9.5 13 16.4 13 23.4A13 13 0 0 1 11 27.4C11 20.4 17 13.5 24 4Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M17.5 28.5c1.6-1.7 3.3-1.7 4.9 0s3.3 1.7 4.9 0 3.3-1.7 4.9 0" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-signal" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
+      <path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4M4.8 4.8a10 10 0 0 0 0 14.4M19.2 4.8a10 10 0 0 1 0 14.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M5 12h13M12.5 5.5 19 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24">
+      <path d="M20 4C10 4 4 9 4 16c0 1.6.4 3 1.1 4.2C7 14 11 10.6 17 9c-4.6 2.4-7.6 5.7-9.3 11.3C9 20.8 10.4 21 12 21c6 0 9-5 8-17Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13.5 2 4 13.5h6L9.5 22 20 10.5h-6.6L13.5 2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M12 2.5 4.5 5.5v6c0 5 3.2 8.6 7.5 10 4.3-1.4 7.5-5 7.5-10v-6L12 2.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="m8.5 12 2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24">
+      <path d="M5 21V4M5 4.5h13l-2.5 4L18 13H5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-truck" viewBox="0 0 32 20">
+      <rect x="1" y="3" width="17" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M18 6h5.5l4.5 4.5V14H18V6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <circle cx="8" cy="16" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/>
+      <circle cx="23" cy="16" r="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ HEADER ============ -->
+<header class="header" id="header">
+  <a class="brand" href="#top" data-cursor="Domov">
+    <span class="brand__mark"><svg viewBox="0 0 48 48"><use href="#i-drop"></use></svg></span>
+    <span class="brand__text">
+      <b>žumpuj<i>.sk</i></b>
+      <em>inteligentné riešenie pre vašu žumpu</em>
+    </span>
+  </a>
+
+  <nav class="nav" aria-label="Hlavná navigácia">
+    <a href="#ako" data-nav>o Žumpuj</a>
+    <a href="#video" data-nav>Video</a>
+    <a href="#vyhody" data-nav>Kľúčové výhody</a>
+    <span class="nav__pill" aria-hidden="true"></span>
+  </nav>
+
+  <a href="#pridat-sa" class="btn btn--pill btn--magnetic header__cta" data-cursor="Poď do toho">
+    <span>Pridať sa</span>
+    <svg viewBox="0 0 24 24" class="btn__ico"><use href="#i-arrow"></use></svg>
+  </a>
+
+  <button class="burger" id="burger" aria-label="Otvoriť menu" aria-expanded="false" aria-controls="menu">
+    <i></i><i></i>
+  </button>
+</header>
+
+<!-- ============ FULLSCREEN MENU ============ -->
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="menu__bg"></div>
+  <nav class="menu__list">
+    <a href="#ako"      style="--i:0"><span class="menu__num">01</span><span class="menu__txt">o Žumpuj</span></a>
+    <a href="#app"      style="--i:1"><span class="menu__num">02</span><span class="menu__txt">Aplikácia</span></a>
+    <a href="#video"    style="--i:2"><span class="menu__num">03</span><span class="menu__txt">Video</span></a>
+    <a href="#vyhody"   style="--i:3"><span class="menu__num">04</span><span class="menu__txt">Kľúčové výhody</span></a>
+    <a href="#pridat-sa"style="--i:4"><span class="menu__num">05</span><span class="menu__txt">Pridať sa</span></a>
+  </nav>
+  <div class="menu__foot">
+    <span>4Eko s.r.o. · Nitra</span>
+    <a href="mailto:info@zumpuj.sk">info@zumpuj.sk</a>
+  </div>
+</div>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero">
+  <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+  <div class="hero__grid" aria-hidden="true"></div>
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="hero__inner">
+    <div class="hero__copy">
+      <p class="eyebrow anim" style="--d:.05s">
+        <svg viewBox="0 0 24 24" class="eyebrow__ico"><use href="#i-signal"></use></svg>
+        IoT senzor + umelá inteligencia
+        <span class="eyebrow__sep"></span>
+        vyvinuté na Slovensku
+      </p>
+
+      <h1 class="hero__title">
+        <span class="line anim" style="--d:.15s">Žumpa,</span>
+        <span class="line anim" style="--d:.25s">ktorá sa</span>
+        <span class="line line--accent anim" style="--d:.35s">vyvezie <em data-scramble="sama">sama</em>.</span>
+      </h1>
+
+      <p class="hero__lead anim" style="--d:.5s">
+        Sledovať hladinu, aby nepretiekla. Nahlásiť odvoz. Dúfať, že žumpár bude mať čas.
+        A potom byť celý deň doma a čakať. <b>Poznáte to?</b>
+        Vďaka Žumpuj.sk to už riešiť nebudete — o všetko sa postaráme my.
+      </p>
+
+      <div class="hero__cta anim" style="--d:.65s">
+        <a href="#pridat-sa" class="btn btn--solid btn--magnetic" data-cursor="Chcem to">
+          <span>Pridať sa medzi priekopníkov</span>
+          <svg viewBox="0 0 24 24" class="btn__ico"><use href="#i-arrow"></use></svg>
+        </a>
+        <a href="#video" class="btn btn--ghost btn--magnetic" data-cursor="Prehrať">
+          <svg viewBox="0 0 24 24" class="btn__ico"><use href="#i-play"></use></svg>
+          <span>Pozrieť video</span>
+        </a>
+      </div>
+
+      <ul class="stats anim" style="--d:.8s">
+        <li><b data-count="24" data-suffix="/7">0</b><span>monitoring hladiny</span></li>
+        <li><b data-count="100" data-suffix=" %">0</b><span>automatický vývoz*</span></li>
+        <li><b data-count="0" data-suffix="×">0</b><span>telefonátov žumpárovi</span></li>
+        <li><b class="stats__flag">SK</b><span>vývoj aj výroba</span></li>
+      </ul>
+      <p class="stats__note anim" style="--d:.9s">* pri inštalácii s našou výpusťou vyvedenou na prístupné miesto.</p>
+    </div>
+
+    <!-- interaktívna nádrž -->
+    <div class="hero__tank anim anim--scale" style="--d:.4s">
+      <div class="tank" id="tank" data-cursor="Ťahaj">
+        <canvas id="tankCanvas" aria-hidden="true"></canvas>
+        <div class="tank__hud">
+          <div class="tank__hud-row"><span>SENZOR</span><b class="dot-live">online</b></div>
+          <div class="tank__hud-row"><span>HLADINA</span><b id="tankPct">42 %</b></div>
+          <div class="tank__hud-row"><span>ODHAD</span><b id="tankEta">o 18 dní</b></div>
+        </div>
+        <div class="tank__hint">pohni myšou / potiahni prstom</div>
+      </div>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#problem" aria-label="Posunúť nižšie">
+    <span></span><i></i>
+  </a>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>pretečená žumpa</span><i>✕</i>
+    <span>čakanie celý deň doma</span><i>✕</i>
+    <span>„zavolajte o týždeň“</span><i>✕</i>
+    <span>meranie palicou</span><i>✕</i>
+    <span>zápach na dvore</span><i>✕</i>
+    <span>zbytočné jazdy</span><i>✕</i>
+    <span>pretečená žumpa</span><i>✕</i>
+    <span>čakanie celý deň doma</span><i>✕</i>
+    <span>„zavolajte o týždeň“</span><i>✕</i>
+    <span>meranie palicou</span><i>✕</i>
+    <span>zápach na dvore</span><i>✕</i>
+    <span>zbytočné jazdy</span><i>✕</i>
+  </div>
+</div>
+
+<!-- ============ PROBLEM ============ -->
+<section class="section problem" id="problem">
+  <div class="wrap">
+    <div class="split">
+      <div class="split__l">
+        <p class="eyebrow reveal">01 — Realita</p>
+        <h2 class="h2 reveal">Žumpa a hlavne jej vývoz vedia poriadne <em>znepríjemniť bývanie</em>.</h2>
+      </div>
+      <div class="split__r">
+        <p class="lead reveal">
+          Či sa jedná o novostavbu, alebo starší dom — vždy je to to isté kolečko.
+          Sledovať hladinu, aby nepretiekla. Nahlásiť odvoz. Dúfať, že žumpár bude mať čas.
+          A keď si konečne dohodnete termín, musíte byť doma a čakať, kedy príde.
+        </p>
+        <div class="pain">
+          <div class="pain__item reveal" style="--d:.05s"><b>Ručne</b><span>Kontrola hladiny palicou alebo „od oka“.</span></div>
+          <div class="pain__item reveal" style="--d:.12s"><b>Neskoro</b><span>Zistíte to až keď je problém na dvore.</span></div>
+          <div class="pain__item reveal" style="--d:.19s"><b>Nepohodlne</b><span>Dovolenka v práci, len aby ste otvorili bránu.</span></div>
+          <div class="pain__item reveal" style="--d:.26s"><b>Neekologicky</b><span>Nikto nekontroluje, kam obsah naozaj skončí.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AKO TO FUNGUJE (sticky scroll story) ============ -->
+<section class="section story" id="ako">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="eyebrow reveal">02 — Ako to funguje</p>
+      <h2 class="h2 reveal">Štyri kroky. <em>Vy nerobíte ani jeden.</em></h2>
+      <p class="lead reveal">Vďaka nášmu inovatívnemu senzoru uvidíte reálny stav v mobilnej aplikácii či na internete a automatizácia za pomoci umelej inteligencie naplánuje celý proces vývozu.</p>
+    </header>
+  </div>
+
+  <div class="story__stage">
+    <div class="wrap story__layout">
+      <!-- ľavá lepkavá vizualizácia -->
+      <div class="story__visual">
+        <div class="story__viz" id="storyViz">
+          <div class="story__ring" aria-hidden="true"></div>
+          <div class="story__scene" data-scene="0">
+            <svg viewBox="0 0 200 200" class="scene scene--sensor">
+              <circle cx="100" cy="100" r="70" class="s-ping"/>
+              <circle cx="100" cy="100" r="70" class="s-ping s-ping--2"/>
+              <rect x="82" y="60" width="36" height="52" rx="10" class="s-body"/>
+              <path d="M100 112v34" class="s-beam"/>
+              <path d="M62 150h76" class="s-water"/>
+              <circle cx="100" cy="76" r="5" class="s-led"/>
+              <path d="M86 46h28l-6-10H92l-6 10Z" class="s-solar"/>
+            </svg>
+            <svg viewBox="0 0 200 200" class="scene scene--ai">
+              <g class="ai-net">
+                <circle cx="45" cy="70" r="5"/><circle cx="45" cy="130" r="5"/>
+                <circle cx="100" cy="50" r="5"/><circle cx="100" cy="100" r="5"/><circle cx="100" cy="150" r="5"/>
+                <circle cx="155" cy="80" r="5"/><circle cx="155" cy="125" r="5"/>
+                <path d="M45 70 100 50M45 70 100 100M45 130 100 100M45 130 100 150M100 50 155 80M100 100 155 80M100 100 155 125M100 150 155 125"/>
+              </g>
+              <path class="ai-chart" d="M30 160 60 140 90 132 120 96 150 74 175 44"/>
+            </svg>
+            <svg viewBox="0 0 200 200" class="scene scene--truck">
+              <path d="M10 150h180" class="t-road"/>
+              <g class="t-truck"><use href="#i-truck" x="0" y="0" width="64" height="40"/></g>
+              <path class="t-dash" d="M10 150h180"/>
+              <g class="t-house"><path d="M120 150v-34l22-18 22 18v34"/><path d="M134 150v-20h16v20"/></g>
+            </svg>
+            <svg viewBox="0 0 200 200" class="scene scene--eco">
+              <path class="e-arc" d="M40 150a60 60 0 0 1 120 0"/>
+              <g class="e-leaf"><use href="#i-leaf" x="72" y="62" width="56" height="56"/></g>
+              <path class="e-drops" d="M70 150v18M100 150v26M130 150v18"/>
+              <path class="e-ground" d="M24 172h152"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- pravé kroky -->
+      <ol class="story__steps" id="storySteps">
+        <li class="step" data-step="0">
+          <span class="step__num">01</span>
+          <h3>Senzor meria hladinu</h3>
+          <p>Malé zariadenie, ktoré poháňa vlastný fotovoltický panel. Žiadne káble, žiadna údržba. Reálny stav vidíte v mobile alebo na webe — kedykoľvek.</p>
+        </li>
+        <li class="step" data-step="1">
+          <span class="step__num">02</span>
+          <h3>Umelá inteligencia vyhodnotí</h3>
+          <p>Systém sa naučí váš rytmus spotreby a vie dopredu povedať, kedy bude plno. Zachytí aj netypický nárast — teda možný únik alebo poruchu.</p>
+        </li>
+        <li class="step" data-step="2">
+          <span class="step__num">03</span>
+          <h3>Vývoz sa objedná sám</h3>
+          <p>Keď systém zaznamená, že sa žumpa napĺňa, sám to vyhodnotí a objedná vyvezenie. S našou prípojkou vyvedenou na prístupné miesto nemusíte byť ani doma.</p>
+        </li>
+        <li class="step" data-step="3">
+          <span class="step__num">04</span>
+          <h3>Dohliadneme na spracovanie</h3>
+          <p>Vypúšťanie obsahu žúmp do prírody ohrozuje podzemné vody a ekosystém. My sledujeme cestu odpadu až do čističky, kde bude ekologicky spracovaný.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APLIKÁCIA / ŽIVÝ DASHBOARD ============ -->
+<section class="section app" id="app">
+  <div class="wrap">
+    <header class="section__head section__head--center">
+      <p class="eyebrow reveal">03 — Aplikácia</p>
+      <h2 class="h2 reveal">Celá žumpa <em>na jednej obrazovke</em>.</h2>
+      <p class="lead reveal">Toto je živá ukážka. Sledujte, čo sa stane, keď hladina dosiahne hranicu — bez toho, aby ste čokoľvek museli spraviť.</p>
+    </header>
+
+    <div class="app__stage reveal">
+      <div class="app__glow" aria-hidden="true"></div>
+
+      <!-- telefón -->
+      <div class="phone" id="phone">
+        <div class="phone__frame">
+          <div class="phone__notch"></div>
+          <div class="phone__screen">
+            <div class="ui">
+              <div class="ui__top">
+                <div>
+                  <p class="ui__hi">Dobrý deň 👋</p>
+                  <p class="ui__addr">Domov · Nitra</p>
+                </div>
+                <span class="ui__live"><i></i>live</span>
+              </div>
+
+              <div class="ui__gauge">
+                <div class="gauge">
+                  <div class="gauge__fill" id="gaugeFill"><span class="gauge__wave"></span><span class="gauge__wave gauge__wave--2"></span></div>
+                  <div class="gauge__val"><b id="gaugeVal">38</b><i>%</i></div>
+                  <div class="gauge__mark" style="--p:85%"><span>85 % · limit</span></div>
+                </div>
+              </div>
+
+              <div class="ui__chart">
+                <div class="ui__chart-head"><span>Posledných 30 dní</span><b id="chartTrend">+2,1 % / deň</b></div>
+                <svg viewBox="0 0 260 80" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="var(--brand-bright)" stop-opacity=".45"/>
+                      <stop offset="100%" stop-color="var(--brand-bright)" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path id="chartArea" class="chart__area" d=""/>
+                  <path id="chartLine" class="chart__line" d=""/>
+                  <circle id="chartDot" class="chart__dot" r="3.5"/>
+                </svg>
+              </div>
+
+              <div class="ui__feed" id="uiFeed"></div>
+
+              <div class="ui__cta" id="uiCta">
+                <span class="ui__cta-ico"><svg viewBox="0 0 32 20"><use href="#i-truck"></use></svg></span>
+                <div><b>Vývoz naplánovaný</b><span id="uiCtaSub">automaticky · bez vášho zásahu</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- toast notifikácie -->
+        <div class="toasts" id="toasts"></div>
+
+        <!-- jazdiace auto -->
+        <div class="road" aria-hidden="true">
+          <div class="road__line"></div>
+          <div class="road__truck" id="roadTruck"><svg viewBox="0 0 32 20"><use href="#i-truck"></use></svg></div>
+        </div>
+      </div>
+
+      <div class="app__side">
+        <div class="app__card reveal" style="--d:.05s">
+          <b>Reálny stav, nie odhad</b>
+          <span>Hladinu vidíte v percentách aj v litroch. Bez otvárania poklopu.</span>
+        </div>
+        <div class="app__card reveal" style="--d:.12s">
+          <b>Predikcia namiesto prekvapenia</b>
+          <span>AI z trendu spočíta dátum, kedy bude plno — a koná skôr.</span>
+        </div>
+        <div class="app__card reveal" style="--d:.19s">
+          <b>Upozornenie na únik</b>
+          <span>Nezvyčajný pokles alebo nárast hladiny systém označí okamžite.</span>
+        </div>
+        <div class="app__card reveal" style="--d:.26s">
+          <b>História a doklady</b>
+          <span>Každý vývoz s dátumom a potvrdením o ekologickom spracovaní.</span>
+        </div>
+        <button class="btn btn--replay" id="replayApp" type="button" data-cursor="Znova">
+          <span>Prehrať ukážku znova</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VIDEO ============ -->
+<section class="section video" id="video">
+  <div class="wrap">
+    <header class="section__head section__head--center">
+      <p class="eyebrow reveal">04 — Video</p>
+      <h2 class="h2 reveal">Pozrite si to <em>v akcii</em>.</h2>
+    </header>
+
+    <!-- Náhľad ani prehrávač sa nenačítajú, kým používateľ neudelí súhlas
+         s marketingovými cookies (§ 109 ods. 8 zák. č. 452/2021 Z. z.). -->
+    <div class="player reveal" id="player" data-yt="aTBG7Zqn8Ew" data-cursor="Prehrať">
+      <div class="player__bg"></div>
+      <img class="player__thumb" data-thumb="https://i.ytimg.com/vi/aTBG7Zqn8Ew/maxresdefault.jpg" alt="Video o službe Žumpuj.sk" width="1280" height="720" hidden>
+      <button class="player__btn" type="button" aria-label="Prehrať video">
+        <svg viewBox="0 0 24 24"><use href="#i-play"></use></svg>
+        <span class="player__ripple"></span>
+      </button>
+      <div class="player__meta"><span>Žumpuj.sk</span><i>·</i><span>ako to funguje</span></div>
+
+      <div class="player__lock">
+        <b>Video je vložené zo služby YouTube</b>
+        <p>Prehratím sa načíta obsah spoločnosti Google Ireland Ltd., ktorá môže vo vašom zariadení ukladať cookies a spracúvať vašu IP adresu. Potrebujeme na to váš súhlas.</p>
+        <button class="btn btn--solid btn--magnetic" type="button" data-cc-open>
+          <span>Povoliť a prehrať</span>
+          <svg viewBox="0 0 24 24" class="btn__ico"><use href="#i-play"></use></svg>
+        </button>
+        <p><a href="https://www.youtube.com/watch?v=aTBG7Zqn8Ew" target="_blank" rel="noopener noreferrer">Alebo si video otvorte priamo na YouTube ↗</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VÝHODY ============ -->
+<section class="section benefits" id="vyhody">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="eyebrow reveal">05 — Kľúčové výhody</p>
+      <h2 class="h2 reveal">Prečo práve <em>Žumpuj.sk</em>?</h2>
+    </header>
+
+    <div class="bento">
+      <article class="card card--wide reveal" data-spotlight>
+        <span class="card__ico"><svg viewBox="0 0 24 24"><use href="#i-shield"></use></svg></span>
+        <h3>Bezstarostnosť</h3>
+        <p>Žumpa je často vnímaná ako strašiak, ale to už nemusí! Žiadne kontrolovanie hladiny, žiadne dohadovanie termínov vývozu. Všetko prebehne automaticky — jediné, čo budete musieť spraviť vy, je zaplatiť faktúru.</p>
+        <span class="card__num">01</span>
+      </article>
+
+      <article class="card reveal" style="--d:.08s" data-spotlight>
+        <span class="card__ico"><svg viewBox="0 0 24 24"><use href="#i-bolt"></use></svg></span>
+        <h3>Jednoduchá inštalácia</h3>
+        <p>Senzor je malé zariadenie, ktoré poháňa vlastný fotovoltický panel. Systém funguje najlepšie, ak je nainštalovaný aj výstup do ľahko prístupného miesta — napríklad do plotu.</p>
+        <span class="card__num">02</span>
+      </article>
+
+      <article class="card reveal" style="--d:.16s" data-spotlight>
+        <span class="card__ico"><svg viewBox="0 0 24 24"><use href="#i-leaf"></use></svg></span>
+        <h3>Ekologickosť</h3>
+        <p>Vypúšťanie obsahu žúmp do prírody ohrozuje podzemné vody a ekosystém. Vieme zaznamenať nielen únik v žumpe, ale aj dohliadnuť na cestu odpadu do čističky, kde bude ekologicky spracovaný.</p>
+        <span class="card__num">03</span>
+      </article>
+
+      <article class="card card--wide card--flag reveal" style="--d:.24s" data-spotlight>
+        <span class="card__ico"><svg viewBox="0 0 24 24"><use href="#i-flag"></use></svg></span>
+        <h3>Naše, slovenské</h3>
+        <p>Celý vývoj, ako aj výroba prebiehajú na Slovensku. Snažíme sa priniesť inovatívne riešenie, ktoré pomôže chrániť prírodné zdroje a uľahčí nám bežný život.</p>
+        <span class="card__num">04</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FORM ============ -->
+<section class="section signup" id="pridat-sa">
+  <div class="signup__bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="signup__grid">
+      <div class="signup__copy">
+        <p class="eyebrow reveal">06 — Pridať sa</p>
+        <h2 class="h2 reveal">Znie to <em>zaujímavo</em>?</h2>
+        <p class="lead reveal">Náš senzor už testujeme a tvrdo pracujeme na vývoji všetkých súčastí systému. Prihlásením získate medzi prvými informácie o novinkách, cenách a možnosti inštalácie vo vašej oblasti.</p>
+        <p class="signup__gift reveal"><span>🎉</span> Môžete sa tešiť na špeciálnu ponuku pre našich priekopníkov.</p>
+        <div class="signup__trust reveal">
+          <b>4Eko s.r.o.</b>
+          <span>Fraňa Mojtu 18, 949 01 Nitra</span>
+          <a href="mailto:info@zumpuj.sk">info@zumpuj.sk</a>
+        </div>
+      </div>
+
+      <form class="form reveal" id="form" novalidate>
+        <div class="form__row">
+          <div class="field">
+            <input type="text" id="f-name" name="meno" placeholder=" " autocomplete="name" required>
+            <label for="f-name">Vaše meno</label>
+            <i class="field__line"></i>
+          </div>
+          <div class="field">
+            <input type="email" id="f-mail" name="email" placeholder=" " autocomplete="email" required>
+            <label for="f-mail">Váš e-mail</label>
+            <i class="field__line"></i>
+          </div>
+        </div>
+
+        <fieldset class="choice">
+          <legend>Typ inštalácie</legend>
+          <label class="choice__opt">
+            <input type="radio" name="instalacia" value="plna" checked>
+            <span class="choice__box">
+              <b>Plná inštalácia s výpusťou</b>
+              <em>100 % automatický vývoz, nemusíte byť doma</em>
+            </span>
+          </label>
+          <label class="choice__opt">
+            <input type="radio" name="instalacia" value="senzor">
+            <span class="choice__box">
+              <b>Iba senzor na meranie hladiny</b>
+              <em>Prehľad a upozornenia v aplikácii</em>
+            </span>
+          </label>
+        </fieldset>
+
+        <div class="field">
+          <input type="text" id="f-addr" name="adresa" placeholder=" " autocomplete="street-address">
+          <label for="f-addr">Adresa</label>
+          <i class="field__line"></i>
+        </div>
+
+        <div class="form__row form__row--3">
+          <div class="field">
+            <input type="text" id="f-city" name="mesto" placeholder=" " autocomplete="address-level2">
+            <label for="f-city">Mesto</label>
+            <i class="field__line"></i>
+          </div>
+          <div class="field">
+            <input type="text" id="f-region" name="kraj" placeholder=" " autocomplete="address-level1">
+            <label for="f-region">Kraj</label>
+            <i class="field__line"></i>
+          </div>
+          <div class="field">
+            <input type="text" id="f-zip" name="psc" placeholder=" " autocomplete="postal-code" inputmode="numeric">
+            <label for="f-zip">PSČ</label>
+            <i class="field__line"></i>
+          </div>
+        </div>
+
+        <label class="gdpr">
+          <input type="checkbox" name="gdpr" required>
+          <span class="gdpr__box"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span>
+          <span class="gdpr__txt">Súhlasím so spracúvaním svojich osobných údajov na účel zasielania informácií o službe Žumpuj.sk. Súhlas je dobrovoľný a môžem ho kedykoľvek odvolať. Viac v <a href="ochrana-osobnych-udajov.html">zásadách ochrany osobných údajov</a>.</span>
+        </label>
+
+        <button type="submit" class="btn btn--solid btn--block btn--magnetic" data-cursor="Odoslať">
+          <span>Chcem byť medzi prvými</span>
+          <svg viewBox="0 0 24 24" class="btn__ico"><use href="#i-arrow"></use></svg>
+        </button>
+
+        <div class="form__done" id="formDone" hidden>
+          <span class="form__check"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></svg></span>
+          <b>Ďakujeme! Ste na zozname priekopníkov.</b>
+          <span>Ozveme sa hneď, ako spustíme inštalácie vo vašej oblasti.</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <span class="brand__mark"><svg viewBox="0 0 48 48"><use href="#i-drop"></use></svg></span>
+        <b>žumpuj<i>.sk</i></b>
+        <p>Inteligentné riešenie pre vašu žumpu. Vyvinuté a vyrobené na Slovensku.</p>
+      </div>
+      <div class="footer__col">
+        <h4>Kto stojí za Žumpuj.sk?</h4>
+        <p>4Eko s.r.o.<br>Fraňa Mojtu 18<br>949 01 Nitra</p>
+      </div>
+      <div class="footer__col">
+        <h4>Kontakt</h4>
+        <p><a href="mailto:info@zumpuj.sk">info@zumpuj.sk</a></p>
+      </div>
+      <div class="footer__col">
+        <h4>Navigácia</h4>
+        <p>
+          <a href="#ako">o Žumpuj</a><br>
+          <a href="#video">Video</a><br>
+          <a href="#vyhody">Kľúčové výhody</a><br>
+          <a href="#pridat-sa">Pridať sa</a>
+        </p>
+      </div>
+      <div class="footer__col">
+        <h4>Právne informácie</h4>
+        <p>
+          <a href="ochrana-osobnych-udajov.html">Ochrana osobných údajov</a><br>
+          <a href="cookies.html">Zásady používania cookies</a><br>
+          <a href="podmienky-pouzivania.html">Podmienky používania</a><br>
+          <a href="#cookie-nastavenia" data-cc-open>Nastavenia cookies</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="footer__word" aria-hidden="true">ŽUMPUJ</div>
+
+    <div class="footer__bottom">
+      <span>© <span id="year">2026</span> 4Eko s.r.o. Všetky práva vyhradené.</span>
+      <a href="ochrana-osobnych-udajov.html">GDPR a spracovanie osobných údajov</a>
+      <a href="#cookie-nastavenia" data-cc-open>Nastavenia cookies</a>
+      <a href="#top" class="footer__up" data-cursor="Hore">Späť hore <svg viewBox="0 0 24 24"><use href="#i-arrow"></use></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/cookies.js" defer></script>
+<script src="assets/js/hero-canvas.js" defer></script>
+<script src="assets/js/dashboard.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
