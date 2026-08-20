@@ -917,9 +917,15 @@ body.ready .anim{ opacity:1; }
   .hero{ min-height:0; }
   .tank{ width:min(100%,340px); }
   .story__layout{ grid-template-columns:1fr; }
-  .story__visual{ position:sticky; top:84px; }
-  .story__viz{ width:min(60%,260px); }
+  /* Pri jednom stĺpci sa lepkavý vizuál pripne pod hlavičku a text krokov mu
+     podlieza — animovaná scéna potom prechádza cez písmo. V jednostĺpcovom
+     rozložení preto sticky vypíname a ilustrácia zostáva nad krokmi. */
+  .story__visual{ position:static; top:auto; margin-bottom:clamp(24px,4vw,40px); }
+  .story__viz{ width:min(58%,230px); }
   .story__steps{ padding-block:0; gap:clamp(48px,7vw,80px); }
+  /* keď vizuál nesleduje čítanie, stlmené kroky by boli len horšie čitateľné */
+  .step{ opacity:1; transform:none; }
+  .step__num{ color:var(--brand-bright); }
   .app__stage{ grid-template-columns:1fr; }
   .split{ grid-template-columns:1fr; }
   .signup__grid{ grid-template-columns:1fr; }
