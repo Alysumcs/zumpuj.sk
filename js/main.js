@@ -210,31 +210,92 @@
 
   /* ---------------------------------------------------- 06 SCROLL STORY -- */
   (function () {
-    var steps = $$('.step');
-    var scenes = $$('.scene');
+    var steps    = $$('.step');
+    var scenes   = $$('.scene');
+    var stage    = $('.story__stage');
+    var track    = $('#storySteps');
+    var viewport = $('#storyViewport');
+    var dotsEl   = $('#storyDots');
     if (!steps.length) return;
 
+    var N = steps.length;
+
+    /* --- bodky (viditeľné len v pripnutom vodorovnom režime) --- */
+    var dots = [];
+    if (dotsEl) {
+      steps.forEach(function (s, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.setAttribute('role', 'tab');
+        b.setAttribute('aria-label', 'Krok ' + (i + 1));
+        b.addEventListener('click', function () { goTo(i); });
+        dotsEl.appendChild(b);
+        dots.push(b);
+      });
+    }
+
+    var current = -1;
     function activate(i) {
+      if (i === current) return;
+      current = i;
       steps.forEach(function (s, k) { s.classList.toggle('on', k === i); });
       scenes.forEach(function (s, k) { s.classList.toggle('on', k === i); });
+      dots.forEach(function (d, k) { d.classList.toggle('on', k === i); });
     }
-    activate(0);
 
-    /* Aktívny krok počítame zo scrollu, nie cez IntersectionObserver s okrajmi.
-       Dôvod: IO verzia potrebovala pod posledným krokom ~10vh voľného miesta,
-       aby sa stihol dostať do stredu obrazovky — a to rozbíjalo rovnomerné
-       medzery medzi sekciami. Takto si vystačíme bez extra odsadenia a navyše
-       sa nikdy nestane, že by pri rýchlom scrollovaní nebol aktívny žiadny krok. */
-    var current = -1;
-    function pick() {
-      var mid = window.innerHeight * 0.5;
-      var best = 0, bestD = Infinity;
-      for (var i = 0; i < steps.length; i++) {
-        var r = steps[i].getBoundingClientRect();
-        var d = Math.abs(r.top + r.height / 2 - mid);
-        if (d < bestD) { bestD = d; best = i; }
+    /* Pripnutý režim spoznáme podľa toho, či je stage naozaj vyšší než okno —
+       teda podľa reálneho stavu layoutu, nie podľa čísla breakpointu. */
+    function isPinned() {
+      return !!(stage && viewport && stage.offsetHeight > window.innerHeight * 1.4);
+    }
+
+    /* stred i-teho kroku v rámci posúvanej lišty */
+    function centerOf(i) {
+      var s = steps[i];
+      return s.offsetLeft + s.offsetWidth / 2;
+    }
+
+    /* koľko stránky treba prerolovať, aby sme boli na kroku i */
+    function scrollForIndex(i) {
+      var top = stage.getBoundingClientRect().top + window.scrollY;
+      var dist = stage.offsetHeight - window.innerHeight;
+      return top + dist * (i / (N - 1));
+    }
+
+    function goTo(i) {
+      if (isPinned()) {
+        window.scrollTo({ top: scrollForIndex(i), behavior: REDUCED ? 'auto' : 'smooth' });
+      } else {
+        steps[i].scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
       }
-      if (best !== current) { current = best; activate(best); }
+    }
+
+    function pick() {
+      if (isPinned()) {
+        /* postup v pripnutej sekcii 0…1 → plynulý posun lišty + aktívny krok */
+        var top  = stage.getBoundingClientRect().top;
+        var dist = stage.offsetHeight - window.innerHeight;
+        var p = dist > 0 ? Math.min(1, Math.max(0, -top / dist)) : 0;
+
+        var f = p * (N - 1);
+        var i = Math.min(N - 2, Math.floor(f));
+        var frac = N > 1 ? f - i : 0;
+        var c = N > 1 ? centerOf(i) + (centerOf(i + 1) - centerOf(i)) * frac : centerOf(0);
+        track.style.setProperty('--x', (viewport.clientWidth / 2 - c).toFixed(1) + 'px');
+
+        activate(Math.round(f));
+        return;
+      }
+
+      /* stĺpcový režim — aktívny je krok najbližšie k stredu obrazovky */
+      if (track) track.style.removeProperty('--x');
+      var mid = window.innerHeight * 0.5, best = 0, bestD = Infinity;
+      for (var k = 0; k < N; k++) {
+        var r = steps[k].getBoundingClientRect();
+        var d = Math.abs(r.top + r.height / 2 - mid);
+        if (d < bestD) { bestD = d; best = k; }
+      }
+      activate(best);
     }
 
     var ticking = false;
@@ -244,7 +305,7 @@
       requestAnimationFrame(function () { ticking = false; pick(); });
     }
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('resize', function () { current = -1; onScroll(); }, { passive: true });
     pick();
   })();
 
