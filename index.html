@@ -308,6 +308,7 @@
       </div>
 
       <!-- pravé kroky -->
+      <div class="story__viewport" id="storyViewport">
       <ol class="story__steps" id="storySteps">
         <li class="step" data-step="0">
           <span class="step__num">01</span>
@@ -330,6 +331,9 @@
           <p>Vypúšťanie obsahu žúmp do prírody ohrozuje podzemné vody a ekosystém. My sledujeme cestu odpadu až do čističky, kde bude ekologicky spracovaný.</p>
         </li>
       </ol>
+      </div>
+
+      <div class="story__dots" id="storyDots" role="tablist" aria-label="Kroky"></div>
     </div>
   </div>
 </section>
@@ -373,8 +377,8 @@
                 <svg viewBox="0 0 260 80" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="gArea" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stop-color="var(--aqua)" stop-opacity=".45"/>
-                      <stop offset="100%" stop-color="var(--aqua)" stop-opacity="0"/>
+                      <stop offset="0%" stop-color="var(--aqua-bright)" stop-opacity=".45"/>
+                      <stop offset="100%" stop-color="var(--aqua-bright)" stop-opacity="0"/>
                     </linearGradient>
                   </defs>
                   <path id="chartArea" class="chart__area" d=""/>
