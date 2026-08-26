@@ -75,9 +75,9 @@
     var LAYERS = [
       // off = pokoj. hladina ako podiel výšky hero. Držať ≥ .94, inak vlny
       // vylezú do textu (štatistiky a poznámka pod CTA sedia okolo .88–.92).
-      { amp: 18, len: 0.0042, sp: 0.00055, off: 0.945, c1: 'rgba(12,86,66,.62)',   c2: 'rgba(12,86,66,0)' },
-      { amp: 14, len: 0.0060, sp: 0.00085, off: 0.968, c1: 'rgba(30,150,116,.42)', c2: 'rgba(30,150,116,0)' },
-      { amp: 10, len: 0.0090, sp: 0.00130, off: 0.988, c1: 'rgba(47,217,166,.28)', c2: 'rgba(47,217,166,0)' }
+      { amp: 18, len: 0.0042, sp: 0.00055, off: 0.945, c1: 'rgba(30,84,75,.62)',   c2: 'rgba(30,84,75,0)' },
+      { amp: 14, len: 0.0060, sp: 0.00085, off: 0.968, c1: 'rgba(59,136,123,.42)', c2: 'rgba(59,136,123,0)' },
+      { amp: 10, len: 0.0090, sp: 0.00130, off: 0.988, c1: 'rgba(89,188,171,.28)', c2: 'rgba(89,188,171,0)' }
     ];
 
     function waveY(L, x) {
@@ -117,7 +117,7 @@
           var y2 = waveY(L, x2);
           if (x2 === 0) ctx.moveTo(x2, y2); else ctx.lineTo(x2, y2);
         }
-        ctx.strokeStyle = 'rgba(47,217,166,' + (0.10 + i * 0.06) + ')';
+        ctx.strokeStyle = 'rgba(89,188,171,' + (0.10 + i * 0.06) + ')';
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -142,7 +142,7 @@
         }
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, 6.2832);
-        ctx.fillStyle = 'rgba(150,240,210,' + p.a + ')';
+        ctx.fillStyle = 'rgba(175,225,215,' + p.a + ')';
         ctx.fill();
       }
     }
@@ -156,7 +156,7 @@
         if (b.y < H * 0.55) { bubbles[i] = newBubble(false); continue; }
         ctx.beginPath();
         ctx.arc(x, b.y, b.r, 0, 6.2832);
-        ctx.strokeStyle = 'rgba(47,217,166,.22)';
+        ctx.strokeStyle = 'rgba(89,188,171,.22)';
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -170,7 +170,7 @@
         if (r.a < 0.01) { ripples.splice(i, 1); continue; }
         ctx.beginPath();
         ctx.arc(r.x, r.y, r.r, 0, 6.2832);
-        ctx.strokeStyle = 'rgba(47,217,166,' + r.a + ')';
+        ctx.strokeStyle = 'rgba(89,188,171,' + r.a + ')';
         ctx.lineWidth = 1.2;
         ctx.stroke();
       }
@@ -277,8 +277,8 @@
       ctx.closePath();
       var warn = level > 0.85;
       var g = ctx.createLinearGradient(0, H * (1 - level), 0, H);
-      g.addColorStop(0, warn ? 'rgba(255,159,61,.85)' : 'rgba(47,217,166,.78)');
-      g.addColorStop(1, warn ? 'rgba(180,60,10,.85)' : 'rgba(12,86,66,.92)');
+      g.addColorStop(0, warn ? 'rgba(217,132,60,.85)' : 'rgba(89,188,171,.78)');
+      g.addColorStop(1, warn ? 'rgba(150,72,28,.85)' : 'rgba(30,84,75,.92)');
       ctx.fillStyle = g;
       ctx.fill();
 
@@ -294,7 +294,7 @@
 
       /* senzor */
       var sx = W / 2, sy = 62;
-      ctx.strokeStyle = 'rgba(160,228,24,.95)';
+      ctx.strokeStyle = 'rgba(101,136,59,.95)';
       ctx.lineWidth = 2;
       ctx.beginPath(); ctx.roundRect ? ctx.roundRect(sx - 15, sy - 20, 30, 40, 8) : ctx.rect(sx - 15, sy - 20, 30, 40);
       ctx.fillStyle = 'rgba(6,20,12,.85)';
@@ -304,14 +304,14 @@
       ctx.beginPath();
       ctx.moveTo(sx - 22, sy - 26); ctx.lineTo(sx + 22, sy - 26);
       ctx.lineTo(sx + 15, sy - 34); ctx.lineTo(sx - 15, sy - 34); ctx.closePath();
-      ctx.fillStyle = 'rgba(160,228,24,.18)';
-      ctx.strokeStyle = 'rgba(160,228,24,.8)';
+      ctx.fillStyle = 'rgba(101,136,59,.18)';
+      ctx.strokeStyle = 'rgba(101,136,59,.8)';
       ctx.fill(); ctx.stroke();
 
       /* LED */
       var blink = 0.45 + Math.abs(Math.sin(t * 0.035)) * 0.55;
       ctx.beginPath(); ctx.arc(sx, sy - 8, 3.2, 0, 6.2832);
-      ctx.fillStyle = 'rgba(160,228,24,' + blink + ')';
+      ctx.fillStyle = 'rgba(101,136,59,' + blink + ')';
       ctx.fill();
 
       /* sonar lúč */
@@ -319,7 +319,7 @@
       ctx.save();
       ctx.setLineDash([4, 7]);
       ctx.lineDashOffset = -t * 0.55;
-      ctx.strokeStyle = 'rgba(160,228,24,.75)';
+      ctx.strokeStyle = 'rgba(101,136,59,.75)';
       ctx.lineWidth = 1.6;
       ctx.beginPath(); ctx.moveTo(sx, sy + 20); ctx.lineTo(sx, top - 2); ctx.stroke();
       ctx.restore();
@@ -328,7 +328,7 @@
       var pingR = (t * 0.65) % 46;
       ctx.beginPath();
       ctx.ellipse(sx, top, pingR, pingR * 0.28, 0, 0, 6.2832);
-      ctx.strokeStyle = 'rgba(160,228,24,' + (0.4 * (1 - pingR / 46)) + ')';
+      ctx.strokeStyle = 'rgba(101,136,59,' + (0.4 * (1 - pingR / 46)) + ')';
       ctx.lineWidth = 1.4;
       ctx.stroke();
 
@@ -339,13 +339,13 @@
         if (d.y >= surfaceY(d.x)) { drops.splice(i, 1); continue; }
         ctx.beginPath();
         ctx.ellipse(d.x, d.y, 1.8, 3.4, 0, 0, 6.2832);
-        ctx.fillStyle = 'rgba(150,240,210,.85)';
+        ctx.fillStyle = 'rgba(175,225,215,.85)';
         ctx.fill();
       }
 
       /* varovný pruh */
       if (warn) {
-        ctx.fillStyle = 'rgba(255,159,61,.10)';
+        ctx.fillStyle = 'rgba(217,132,60,.10)';
         ctx.fillRect(0, 0, W, H);
       }
     }
