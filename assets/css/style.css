@@ -72,6 +72,7 @@ img,svg{ display:block; max-width:100%; }
 a{ color:inherit; text-decoration:none; }
 button{ font:inherit; color:inherit; background:none; border:0; cursor:pointer; }
 ul,ol{ margin:0; padding:0; list-style:none; }
+figure{ margin:0; }
 ::selection{ background:var(--brand-soft); color:var(--ink); }
 :focus-visible{ outline:2px solid var(--brand-ink); outline-offset:3px; border-radius:6px; }
 
@@ -250,8 +251,9 @@ h1,h2,h3,h4{ color:var(--ink); font-weight:800; letter-spacing:-.03em; margin:0;
 }
 .hero__cta{ display:flex; flex-wrap:wrap; align-items:center; gap:12px 22px; }
 
-/* Veľká fotografia hneď pod nadpisom — nesie celý dojem. */
-.hero__shot{ margin-top:clamp(36px,5vw,64px); aspect-ratio:16/7.6; }
+/* Veľká fotografia hneď pod nadpisom — nesie celý dojem.
+   Pomer je presne pomer zdroja, aby sa neorezali popisky vo fotke. */
+.hero__shot{ margin:clamp(36px,5vw,64px) 0 0; aspect-ratio:1280/700; }
 
 .facts{
   display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
@@ -692,6 +694,9 @@ h1,h2,h3,h4{ color:var(--ink); font-weight:800; letter-spacing:-.03em; margin:0;
 @media (max-width:1000px){
   .split{ grid-template-columns:1fr; gap:clamp(22px,4vw,36px); }
   .split--flip .split__media{ order:0; }
+  /* Predchádzajúca sekcia končí fotkou — v jednom stĺpci by tu boli dve
+     fotografie tesne za sebou. */
+  .split__media{ display:none; }
 }
 @media (max-width:900px){
   .nav,.header__cta{ display:none; }
@@ -705,7 +710,6 @@ h1,h2,h3,h4{ color:var(--ink); font-weight:800; letter-spacing:-.03em; margin:0;
   .steps,.benefits__list{ grid-template-columns:1fr; }
   .facts{ grid-template-columns:1fr 1fr; gap:20px 24px; }
   .form__row,.form__row--3{ grid-template-columns:1fr; }
-  .hero__shot{ aspect-ratio:4/3.2; }
   .steps__shot,.benefits__shot{ aspect-ratio:4/3; }
   .cc-banner{ left:12px; right:12px; bottom:12px; padding:20px; }
   .cc-banner__actions{ width:100%; }
